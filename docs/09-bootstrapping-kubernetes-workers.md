@@ -19,30 +19,9 @@ Generate a certificate and private key for one worker node:
 Worker1:
 
 ```
-master-1$ cat > openssl-worker-1.cnf <<EOF
-[req]
-req_extensions = v3_req
-distinguished_name = req_distinguished_name
-[req_distinguished_name]
-[ v3_req ]
-basicConstraints = CA:FALSE
-keyUsage = nonRepudiation, digitalSignature, keyEncipherment
-subjectAltName = @alt_names
-[alt_names]
-DNS.1 = worker-1
-IP.1 = 192.168.5.21
-EOF
-
-openssl genrsa -out worker-1.key 2048
-openssl req -new -key worker-1.key -subj "/CN=system:node:worker-1/O=system:nodes" -out worker-1.csr -config openssl-worker-1.cnf
-openssl x509 -req -in worker-1.csr -CA ca.crt -CAkey ca.key -CAcreateserial  -out worker-1.crt -extensions v3_req -extfile openssl-worker-1.cnf -days 1000
-```
-
-Results:
-
-```
-worker-1.key
-worker-1.crt
+gencert worker-1 /CN=system:node:worker-1/O=system:nodes \
+  --dns worker-1 \
+  --ip 192.168.5.21
 ```
 
 ### The kubelet Kubernetes Configuration File
