@@ -63,14 +63,14 @@ Vagrant.configure("2") do |config|
         vb.cpus = 2
       end
       node.vm.hostname = "master-#{i}"
-      node.vm.network :private_network, ip: IP_NW + "#{MASTER_IP_START + i}"
-      node.vm.network "forwarded_port", guest: 22, host: "#{2710 + i}"
+      node.vm.network :private_network, ip: "#{IP_NW}#{MASTER_IP_START + i}"
+      node.vm.network "forwarded_port", guest: 22, host: (2710 + i).to_s
 
-      node.vm.provision "setup-hosts", :type => "shell", :path => "ubuntu/vagrant/setup-hosts.sh" do |s|
+      node.vm.provision "setup-hosts", type: "shell", path: "ubuntu/vagrant/setup-hosts.sh" do |s|
         s.args = ["enp0s8"]
       end
 
-      node.vm.provision "setup-dns", type: "shell", :path => "ubuntu/update-dns.sh"
+      node.vm.provision "setup-dns", type: "shell", path: "ubuntu/update-dns.sh"
     end
   end
 
@@ -82,14 +82,15 @@ Vagrant.configure("2") do |config|
       vb.cpus = 1
     end
     node.vm.hostname = "loadbalancer"
-    node.vm.network :private_network, ip: IP_NW + "#{LB_IP_START}"
+    node.vm.network :private_network, ip: "#{IP_NW}#{LB_IP_START}"
     node.vm.network "forwarded_port", guest: 22, host: 2730
 
-    node.vm.provision "setup-hosts", :type => "shell", :path => "ubuntu/vagrant/setup-hosts.sh" do |s|
+    node.vm.provision "setup-hosts", type: "shell", path: "ubuntu/vagrant/setup-hosts.sh" do |s|
       s.args = ["enp0s8"]
     end
 
-    node.vm.provision "setup-dns", type: "shell", :path => "ubuntu/update-dns.sh"
+    node.vm.provision "setup-dns", type: "shell", path: "ubuntu/update-dns.sh"
+
   end
 
   # Provision Worker Nodes
@@ -101,16 +102,16 @@ Vagrant.configure("2") do |config|
         vb.cpus = 1
       end
       node.vm.hostname = "worker-#{i}"
-      node.vm.network :private_network, ip: IP_NW + "#{NODE_IP_START + i}"
+      node.vm.network :private_network, ip: "#{IP_NW}#{NODE_IP_START + i}"
       node.vm.network "forwarded_port", guest: 22, host: "#{2720 + i}"
 
-      node.vm.provision "setup-hosts", :type => "shell", :path => "ubuntu/vagrant/setup-hosts.sh" do |s|
+      node.vm.provision "setup-hosts", type: "shell", path: "ubuntu/vagrant/setup-hosts.sh" do |s|
         s.args = ["enp0s8"]
       end
 
-      node.vm.provision "setup-dns", type: "shell", :path => "ubuntu/update-dns.sh"
-      node.vm.provision "install-docker", type: "shell", :path => "ubuntu/install-docker.sh"
-      node.vm.provision "allow-bridge-nf-traffic", :type => "shell", :path => "ubuntu/allow-bridge-nf-traffic.sh"
+      node.vm.provision "setup-dns", type: "shell", path: "ubuntu/update-dns.sh"
+      node.vm.provision "install-docker", type: "shell", path: "ubuntu/install-docker.sh"
+      node.vm.provision "allow-bridge-nf-traffic", type: "shell", path: "ubuntu/allow-bridge-nf-traffic.sh"
     end
   end
 end
