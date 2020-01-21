@@ -28,40 +28,10 @@ gencert worker-1 /CN=system:node:worker-1/O=system:nodes \
 
 When generating kubeconfig files for Kubelets the client certificate matching the Kubelet's node name must be used. This will ensure Kubelets are properly authorized by the Kubernetes [Node Authorizer](https://kubernetes.io/docs/admin/authorization/node/).
 
-Get the kub-api server load-balancer IP.
-```
-LOADBALANCER_ADDRESS=192.168.5.30
-```
+```bash
+loadbalancer_ip=192.168.5.30
 
-Generate a kubeconfig file for the first worker node:
-
-```
-{
-  kubectl config set-cluster kubernetes-the-hard-way \
-    --certificate-authority=ca.crt \
-    --embed-certs=true \
-    --server=https://${LOADBALANCER_ADDRESS}:6443 \
-    --kubeconfig=worker-1.kubeconfig
-
-  kubectl config set-credentials system:node:worker-1 \
-    --client-certificate=worker-1.crt \
-    --client-key=worker-1.key \
-    --embed-certs=true \
-    --kubeconfig=worker-1.kubeconfig
-
-  kubectl config set-context default \
-    --cluster=kubernetes-the-hard-way \
-    --user=system:node:worker-1 \
-    --kubeconfig=worker-1.kubeconfig
-
-  kubectl config use-context default --kubeconfig=worker-1.kubeconfig
-}
-```
-
-Results:
-
-```
-worker-1.kubeconfig
+genkubeconf worker-1 $loadbalancer_ip system:node:worker-1
 ```
 
 ### Copy certificates, private keys and kubeconfig files to the worker node:
