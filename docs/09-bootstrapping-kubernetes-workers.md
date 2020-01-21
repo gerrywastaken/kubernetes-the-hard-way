@@ -16,8 +16,6 @@ Kubernetes uses a [special-purpose authorization mode](https://kubernetes.io/doc
 
 Generate a certificate and private key for one worker node:
 
-Worker1:
-
 ```
 gencert worker-1 /CN=system:node:worker-1/O=system:nodes \
   --dns worker-1 \
